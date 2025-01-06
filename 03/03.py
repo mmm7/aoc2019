@@ -62,3 +62,28 @@ for s0 in S0:
 
 print(sorted(intersections))
 print('A:', sorted(intersections)[0][0])
+
+points={}
+
+y,x,w=0,0,0
+for dir,dist in I[0]:
+  dy,dx = DIR[dir]
+  for _ in range(dist):
+    y,x=y+dy,x+dx
+    w+=1
+    if (y,x) in points: continue
+    points[(y,x)]=w
+
+intersections=set()
+
+y,x,w=0,0,0
+for dir,dist in I[1]:
+  dy,dx = DIR[dir]
+  for _ in range(dist):
+    y,x=y+dy,x+dx
+    w+=1
+    if (y,x) in points: intersections.add(points[y,x]+w)
+
+print(sorted(intersections))
+
+print('B:', sorted(intersections)[0])

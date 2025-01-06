@@ -11,7 +11,7 @@ def _getops(mem,pc,mode,num):
     ops.append(_getop(mem,pc,mode,n+1))
   return tuple(ops)
 
-def step(pc,mem):
+def step(pc,mem,input,output):
   instr = mem[pc]%100
   mode=[0]
   modev = mem[pc]//100
@@ -32,11 +32,20 @@ def step(pc,mem):
     assert not mode[3]
     mem[mem[pc+3]]=op1 * op2
     return pc+4
+  if instr==3:  # IN
+    assert not mode[1]
+    mem[mem[pc+1]] = input.popleft()
+    return pc+2
+  if instr==4:  # OUT
+    op1=_getops(mem,pc,mode,1)
+    output.append(op1)
+    return pc+2
+
   raise ValueError(f'unknown instruction at {pc=} : {mem[pc]=}')
 
-def run(pc,mem):
+def run(pc,mem,input=None,output=None):
   while True:
-    pc = step(pc,mem)
+    pc = step(pc,mem,input,output)
     if pc == None: break
   return pc
 

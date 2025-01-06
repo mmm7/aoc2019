@@ -9,6 +9,7 @@ def _getops(mem,pc,mode,num):
   ops = []
   for n in range(num):
     ops.append(_getop(mem,pc,mode,n+1))
+  if num==1: return ops[0]
   return tuple(ops)
 
 def step(pc,mem,input,output):

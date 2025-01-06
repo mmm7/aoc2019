@@ -68,6 +68,12 @@ def run(pc,mem,input=None,output=None):
     if pc == None: break
   return pc
 
+def run_until_next_output(pc,mem,input=None,output=None):
+  while not output:
+    pc = step(pc,mem,input,output)
+    if pc == None: break
+  return pc
+
 def load(p):
   mem=defaultdict(int)
   for i,v in enumerate(p):

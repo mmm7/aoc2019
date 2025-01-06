@@ -40,6 +40,24 @@ def step(pc,mem,input,output):
     op1=_getops(mem,pc,mode,1)
     output.append(op1)
     return pc+2
+  if instr==5:  # jump-if-true
+    op1,op2=_getops(mem,pc,mode,2)
+    if op1!=0: return op2
+    return pc+3
+  if instr==6:  # jump-if-false
+    op1,op2=_getops(mem,pc,mode,2)
+    if op1==0: return op2
+    return pc+3
+  if instr==7:  # less-than
+    op1,op2=_getops(mem,pc,mode,2)
+    assert not mode[3]
+    mem[mem[pc+3]]=(0,1)[op1<op2]
+    return pc+4
+  if instr==8:  # equals
+    op1,op2=_getops(mem,pc,mode,2)
+    assert not mode[3]
+    mem[mem[pc+3]]=(0,1)[op1==op2]
+    return pc+4
 
   raise ValueError(f'unknown instruction at {pc=} : {mem[pc]=}')
 

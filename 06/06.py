@@ -25,3 +25,20 @@ dfs('COM')
 #print(orbs)
 
 print('A:',sum(orbs.values()))
+
+
+revdict={}
+for s,d in I:
+  revdict[d]=s
+
+def path(p):
+  if p=='COM': return ['COM']
+  return path(revdict[p])+[p]
+
+#print(path('YOU'))
+#print(path('SAN'))
+
+you=set(path('YOU'))
+san=set(path('SAN'))
+
+print('B:',2*len(you|san)-len(you)-len(san)-2)

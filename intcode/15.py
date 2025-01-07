@@ -118,3 +118,20 @@ while bfs:
   bfs.append((n+1,(pos[0],pos[1]+1)))
 
 print('A:',n,pos)
+
+vis=set()
+bfs=deque([(0,pos)])
+highest=0
+
+while bfs:
+  n,pos = bfs.popleft()
+  if pos in vis: continue
+  vis.add(pos)
+  if maze[pos]=='#': continue
+  highest=n
+  bfs.append((n+1,(pos[0]-1,pos[1])))
+  bfs.append((n+1,(pos[0]+1,pos[1])))
+  bfs.append((n+1,(pos[0],pos[1]-1)))
+  bfs.append((n+1,(pos[0],pos[1]+1)))
+
+print('B:',highest)

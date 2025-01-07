@@ -1,6 +1,8 @@
+from collections import defaultdict
 import sys
 
 I = {}
+G = defaultdict(set)
 
 def _parse(s):
   s=s.strip('=')
@@ -21,4 +23,5 @@ for l in sys.stdin:
   ss=list(map(_parse,s.split(',')))
   assert tmat not in I
   I[tmat]=(tnum,ss)
-
+  for _,mat in ss:
+    G[tmat].add(mat)

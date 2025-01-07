@@ -1,9 +1,17 @@
 from collections import defaultdict
 
+def _getaddr(mem,pc,mode,num):
+  op = mem[pc+num]
+  if mode[num]==2: return op+mem['rb']   # relative mode
+  if mode[num]==0: return op             # position mode
+  raise ValueError('Wrong getaddr parameter mode:' + str(mode))
+
 def _getop(mem,pc,mode,num):
   op = mem[pc+num]
-  if mode[num]: return op
-  return mem[op]
+  if mode[num]==2: return mem[op+mem['rb']]   # relative mode
+  if mode[num]==1: return op                  # immediate mode
+  if mode[num]==0: return mem[op]             # position mode
+  raise ValueError('Wrong parameter mode:' + str(mode))
 
 def _getops(mem,pc,mode,num):
   ops = []
@@ -25,17 +33,17 @@ def step(pc,mem,input,output):
     return None
   if instr==1:  # ADD
     op1,op2=_getops(mem,pc,mode,2)
-    assert not mode[3]
-    mem[mem[pc+3]]=op1 + op2
+    addr=_getaddr(mem,pc,mode,3)
+    mem[addr]=op1 + op2
     return pc+4
   if instr==2:  # MUL
     op1,op2=_getops(mem,pc,mode,2)
-    assert not mode[3]
-    mem[mem[pc+3]]=op1 * op2
+    addr=_getaddr(mem,pc,mode,3)
+    mem[addr]=op1 * op2
     return pc+4
   if instr==3:  # IN
-    assert not mode[1]
-    mem[mem[pc+1]] = input.popleft()
+    addr=_getaddr(mem,pc,mode,1)
+    mem[addr] = input.popleft()
     return pc+2
   if instr==4:  # OUT
     op1=_getops(mem,pc,mode,1)
@@ -51,14 +59,18 @@ def step(pc,mem,input,output):
     return pc+3
   if instr==7:  # less-than
     op1,op2=_getops(mem,pc,mode,2)
-    assert not mode[3]
-    mem[mem[pc+3]]=(0,1)[op1<op2]
+    addr=_getaddr(mem,pc,mode,3)
+    mem[addr]=(0,1)[op1<op2]
     return pc+4
   if instr==8:  # equals
     op1,op2=_getops(mem,pc,mode,2)
-    assert not mode[3]
-    mem[mem[pc+3]]=(0,1)[op1==op2]
+    addr=_getaddr(mem,pc,mode,3)
+    mem[addr]=(0,1)[op1==op2]
     return pc+4
+  if instr==9:  # adjust relative base
+    op1=_getops(mem,pc,mode,1)
+    mem['rb']+=op1
+    return pc+2
 
   raise ValueError(f'unknown instruction at {pc=} : {mem[pc]=}')
 

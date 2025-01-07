@@ -12,7 +12,8 @@ def iterate():
   for p in I:
     p.move()
 
-for i in range (11):
+for i in range (1001):
   print('===================',i)
   printall()
+  print('Energy:', sum(map(lambda x:x.energy(), I)))
   iterate()

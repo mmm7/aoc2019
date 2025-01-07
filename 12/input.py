@@ -33,6 +33,11 @@ class Moon(object):
     self.dy+=_pull(self.y,other.y)
     self.dz+=_pull(self.z,other.z)
 
+  def energy(self):
+    return (
+      (abs(self.x)+abs(self.y)+abs(self.z)) *
+      (abs(self.dx)+abs(self.dy)+abs(self.dz)))
+
 for l in sys.stdin:
   l = l.strip()
   if not l: continue
